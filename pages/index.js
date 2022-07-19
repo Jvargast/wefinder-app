@@ -4,7 +4,7 @@ import LeftSide from "../components/LeftSide";
 import Sidebar from "../components/Sidebar";
 import Widgets from "../components/Widgets";
 
-export default function Home() {
+export default function Home({newsResults}) {
   return (
     <div>
       <Head>
@@ -17,11 +17,26 @@ export default function Home() {
         <div className="flex flex-row min-h-screen max-w-7xl mx-auto">
           <LeftSide />
           <Feed/> 
-          <Widgets/> 
+          <Widgets newsResults={newsResults.articles}/> 
           {/* <Modal/> */}
         </div>
         
       </main>
     </div>
   );
+}
+
+//https://saurav.tech/NewsAPI/top-headlines/category/bussiness/us.json
+
+export async function getServerSideProps() {
+  const newsResults = await fetch(
+    "https://saurav.tech/NewsAPI/top-headlines/category/business/us.json"
+  ).then((res) => res.json());
+
+  // Who to follow section
+  return {
+    props: {
+      newsResults,
+    },
+  };
 }
