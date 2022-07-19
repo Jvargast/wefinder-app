@@ -2,6 +2,7 @@ import Head from "next/head";
 import Feed from "../components/Feed";
 import LeftSide from "../components/LeftSide";
 import Sidebar from "../components/Sidebar";
+import Widgets from "../components/Widgets";
 
 export default function Home() {
   return (
@@ -16,7 +17,7 @@ export default function Home() {
         <div className="flex flex-row min-h-screen max-w-7xl mx-auto">
           <LeftSide />
           <Feed/> 
-          {/* <Widgets/> */}
+          <Widgets/> 
           {/* <Modal/> */}
         </div>
         
