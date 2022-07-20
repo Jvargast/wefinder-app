@@ -2,12 +2,13 @@ import { SearchIcon } from "@heroicons/react/outline";
 import React, {useState} from "react";
 import News from "./News";
 
-export default function Widgets({ newsResults }) {
-  const [articleNum, setArticleNum] = useState(3)
+export default function Widgets({ newsResults, randomUsersResults }) {
+  const [articleNum, setArticleNum] = useState(3);
+  const [randomUserNum, setRandomUserNum] = useState(3);
 
   return (
     <div className="mt-[82px] xl:w-[600px] hidden lg:inline ml-8 space-y-5">
-      <div className="w-[90%] xl:w-[75%] sticky top-20 bg-white py-1.5 z-50">
+      <div className="w-[90%] xl:w-[75%] sticky top-[4.5rem] bg-white py-1.5 z-50">
         <div className="flex items-center p-3 rounded-full bg-bermuda relative">
           <SearchIcon className="h-5 z-50 text-graySubTitle" />
           <input
@@ -24,9 +25,26 @@ export default function Widgets({ newsResults }) {
         {newsResults.slice(0,articleNum).map((article) => (
           <News key={article.title} article={article} />
         ))}
-        <button onClick={()=> setArticleNum(articleNum +3)} className="text-greenColor pl-3 pb-3 hover:text-[#296e43]">
-          Mostrar más
+        <button onClick={()=> setArticleNum(articleNum +3)} className="text-greenColor pl-4 pb-3 hover:text-[#296e43]">
+          Ver más
         </button>
+      </div>
+      <div className="sticky top-32 text-graySubTitle space-y-3 bg-[#dddbdb] rounded-xl pt-2 w-[90%] xl:w-[75%] ">
+        <h4 className="font-bold text-xl px-4">¿A quién seguir?</h4>
+        {randomUsersResults.slice(0, randomUserNum).map((randomUser)=> (
+          <div key={randomUser.login.username} className="flex items-center px-4 py-2 cursor-pointer hover:bg-[#b3b0b0] transition duration-200">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={randomUser.picture.thumbnail} alt="user" className="rounded-full" width="40"/>
+            <div className="truncate ml-3 leading-5">
+              <h4 className="font-bold hover:underline text-[14px] truncate">{randomUser.login.username}</h4>
+              <h5 className="text-[13px] text-graySubTitle truncate]">{randomUser.name.first + " " + randomUser.name.last}</h5>
+            </div>
+            <button className="ml-auto bg-midnight text-white rounded-full text-sm px-3.5 py-1.5 font-bold">Seguir</button>
+          </div>
+        ))}
+        <button className="text-greenColor pl-4 pb-3 hover:text-[#296e43]" onClick={()=> setRandomUserNum(randomUserNum+3)}>Ver más</button>
+        
+
       </div>
     </div>
   );
