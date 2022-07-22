@@ -132,9 +132,6 @@ export default function NavbarUser() {
                   </div>
                 </Link>
                 <li
-                  smooth={true}
-                  offset={50}
-                  duration={500}
                   className="cursor-pointer text-greenColor rounded-md text-sm font-medium items-center list-none"
                   onClick={()=>setActive(!active)}
                 >
@@ -142,7 +139,7 @@ export default function NavbarUser() {
                     <div className="w-7 h-7">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
-                        src={session.user.image}
+                        src={session ?  session.user.image: UserIcon}
                         className="h-7 w-7 rounded-full"
                         alt="nav"
                       />

@@ -2035,7 +2035,7 @@
   dependencies:
     "locate-path" "^2.0.0"
 
-"firebase@^9.9.0":
+"firebase@^9.8.4":
   "integrity" "sha512-EEUUEDcOTMlNMg4blQQrTmt9axWVI5GNL6XYgrK8kKZsgi8BAUP88b2AWW+UIb684Z/yNENMcRWaghOjOV4rSg=="
   "resolved" "https://registry.npmjs.org/firebase/-/firebase-9.9.0.tgz"
   "version" "9.9.0"

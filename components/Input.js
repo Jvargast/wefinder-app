@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import userIcon from "../assets/user.svg";
 import photoIcon from "../assets/photo-icon.svg";
 import videoIcon from "../assets/video-icon.svg";
@@ -7,10 +7,21 @@ import eventIcon from "../assets/event-icon.svg";
 import articleIcon from "../assets/article-icon.svg";
 
 import spiner from "../assets/spin-loader-icon.svg";
+import { XIcon } from "@heroicons/react/outline";
 import { useSession, getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { Skeleton } from "@mui/material";
 //import { redirect } from "next/dist/server/api-utils";
+import { db, storage } from "../firebase";
+import {
+  addDoc,
+  collection,
+  doc,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
+import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import { async } from "@firebase/util";
 
 const iconStyle = {
   filter:
@@ -20,8 +31,11 @@ const iconStyle = {
 export default function Input() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const filePickerRef = useRef(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  //console.log(session, status);
+  const [input, setInput] = useState("");
 
   if (status === "loading") {
     return (
@@ -34,10 +48,45 @@ export default function Input() {
     router.push("/auth/Signin");
   }
 
+  const sendPost = async () => {
+    if (loading) return;
+    setLoading(true);
+    const docRef = await addDoc(collection(db, "posts"), {
+      id: session.user.userId,
+      text: input,
+      userImg: session.user.image,
+      timestamp: serverTimestamp(),
+      name: session.user.name,
+      username: session.user.username,
+    });
+
+    const imageRef = ref(storage, `posts/${docRef.id}/image`);
+    if (selectedFile) {
+      await uploadString(imageRef, selectedFile, "data_url").then(async () => {
+        const downloadURL = await getDownloadURL(imageRef);
+        await updateDoc(doc(db, "posts", docRef.id), {
+          image: downloadURL,
+        });
+      });
+    }
+    setInput("");
+    setSelectedFile(null);
+    setLoading(false);
+  };
+  const addImageToPost = (e) => {
+    const reader = new FileReader();
+    if (e.target.files[0]) {
+      reader.readAsDataURL(e.target.files[0]);
+    }
+    reader.onload = (readerEvent) => {
+      setSelectedFile(readerEvent.target.result);
+    };
+  };
+
   return (
     <>
       {session ? (
-        <div className="flex border-b border-[#c8bfbfc2] p-3 space-x-3">
+        <div className="flex border-b border-[#c8bfbfc2] p-3 space-x-3 flex-col">
           <div className="w-[72px] h-[72px]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -51,13 +100,42 @@ export default function Input() {
               <textarea
                 className="w-full border-none focus:ring-0 text-lg placeholder-graySubTitle tracking-wide min-h-[50px]"
                 placeholder="¿De qué quieres hablar?"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                id="input"
+                name="input"
               ></textarea>
             </div>
-            <div className="flex flex-row justify-between items-center pt-2.5">
-              <div className=" flex flex-row cursor-pointer items-center">
-                <div className="h-6 w-6 ">
+            {selectedFile && (
+              <div className="relative">
+                <XIcon
+                  className="h-7 text-[#000] absolute cursor-pointer"
+                  onClick={() => setSelectedFile(null)}
+                />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={selectedFile}
+                  alt="selectedFile"
+                  className={`w-full h-full`}
+                />
+              </div>
+            )}
+            {!loading && (<div className="flex flex-row justify-between items-center pt-2.5">
+              <div
+                className=" flex flex-row cursor-pointer items-center"
+                onClick={() => filePickerRef.current.click()}
+                htmlFor="file"
+              >
+                <div className="h-6 w-6">
                   <Image src={photoIcon} alt="picon" style={iconStyle} />
                 </div>
+                <input
+                  type="file"
+                  hidden
+                  id="file"
+                  ref={filePickerRef}
+                  onChange={addImageToPost}
+                />
                 <span className="text-sm text-greenColor ml-1 hover:text-yellowWefinder transition ease-out">
                   Foto
                 </span>
@@ -89,39 +167,46 @@ export default function Input() {
 
               <button
                 className="bg-greenColor text-white px-4 py-1.5 rounded-full font-bold shadow-md hover:brightness-95 disabled:opacity-50"
-                disabled
+                disabled={!input.trim()}
+                onClick={sendPost}
               >
                 Publicar
               </button>
-            </div>
+            </div>)}
           </div>
+          {loading ? (
+            <div className="flex justify-center items-center w-full">
+              <div className="w-[60px] h-[60px]">
+                <Image src={spiner} alt="spin" className="w-full h-full" />
+              </div>
+            </div>
+          ) : (
+            <div>
+              
+            </div>
+          )}
         </div>
       ) : (
         <div className="border-b border-[#c8bfbfc2]">
-          <Skeleton
-          animation="wave"
-          height={200}
-          className="mr-5 ml-5 -mt-5"
-        />
+          <Skeleton animation="wave" height={200} className="mr-5 ml-5 -mt-5" />
         </div>
       )}
     </>
   );
 }
 
-export const getServerSideProps = async(context) => {
-
+export const getServerSideProps = async (context) => {
   const session = await getSession(context);
 
-  if(!session) {
-    redirect:{
-      destination: '/Signin'
-      permanent: false
+  if (!session) {
+    redirect: {
+      destination: "/Signin";
+      permanent: false;
     }
   }
   return {
     props: {
-      session
-    }
-  }
-}
+      session,
+    },
+  };
+};
