@@ -1,11 +1,12 @@
 import Image from "next/image";
-import React from "react";
-import logo from "../assets/logo.png";
-import bullsIcon from "../assets/bulls-eye.svg";
-import arrowBg from "../assets/arrow.jpeg";
-import loginBg from "../assets/background-login-section.jpeg";
-import HeaderLink from "../components/HeaderLink";
-import HeaderSocialLink from "../components/HeaderSocialLink";
+import React, { useEffect, useState } from "react";
+import logo from "../../assets/logo.png";
+import bullsIcon from "../../assets/bulls-eye.svg";
+import arrowBg from "../../assets/arrow.jpeg";
+import loginBg from "../../assets/background-login-section.jpeg";
+import HeaderLink from "../../components/HeaderLink";
+import HeaderSocialLink from "../../components/HeaderSocialLink";
+
 import "animate.css";
 import { getProviders, signIn } from "next-auth/react";
 import Head from "next/head";
@@ -17,14 +18,23 @@ import OndemandVideoSharpIcon from "@mui/icons-material/OndemandVideoSharp";
 import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
 import { Instagram, LinkedIn, Mail, Twitter } from "@mui/icons-material";
 import CheckIcon from "@mui/icons-material/Check";
-import Checks from "../components/Checks";
-import Column from "../components/Column";
-import puzzleIcon from "../assets/puzzle.svg";
-import connectIcon from "../assets/connect.svg";
-import commentIcon from "../assets/comment-icon.svg";
-import communityIcon from "../assets/community.svg";
+import Checks from "../../components/Checks";
+import Column from "../../components/Column";
+import puzzleIcon from "../../assets/puzzle.svg";
+import connectIcon from "../../assets/connect.svg";
+import commentIcon from "../../assets/comment-icon.svg";
+import communityIcon from "../../assets/community.svg";
 
-function Home({ providers }) {
+function Signin() {
+  const [providers, setProviders] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      const res = await getProviders();
+      setProviders(res);
+    })();
+  }, []);
+
   return (
     <div className="">
       <div className="bg-greenColor flex space-x-8 pr-5 justify-end">
@@ -68,18 +78,18 @@ function Home({ providers }) {
             <HeaderLink Icon={OndemandVideoSharpIcon} text="Aprender" />
             <HeaderLink Icon={BusinessCenterIcon} text="Empleos" />
           </div>
-          {Object.values(providers).map((provider) => (
-            <div key={provider.name}>
-              <div className="pl-4">
+          { providers &&  Object.values(providers).map((provider) => (
+            <div key={provider.name}> 
+              <div className="pl-4 pr-4">
                 <button
                   className="text-greenColor font-semibold rounded-full border border-greenColor px-5 py-1.5 transition-all hover:border-2"
-                  onClick={() => signIn(provider.id, { callbackUrl: "/" })}
+                  onClick={() => signIn(provider.id, {callbackUrl:"/"})}
                 >
-                  Iniciar sesión
+                  Iniciar sesión {provider.name}
                 </button>
               </div>
-            </div>
-          ))}
+             </div>
+          ))} 
         </div>
       </header>
       <main className="flex flex-col xl:flex-column items-center mx-auto">
@@ -182,7 +192,10 @@ function Home({ providers }) {
                 <Image
                   src={puzzleIcon}
                   alt="puzzle"
-                  className="filter "
+                  style={{
+                    filter:
+                      "invert(46%) sepia(89%) saturate(6017%) hue-rotate(160deg) brightness(95%) contrast(98%)",
+                  }}
                 />
               </div>
 
@@ -280,9 +293,9 @@ function Home({ providers }) {
   );
 }
 
-export default Home;
+export default Signin;
 
-export async function getServerSideProps(context) {
+/* export async function getServerSideProps(context) {
   const providers = await getProviders();
 
   return {
@@ -290,4 +303,4 @@ export async function getServerSideProps(context) {
       providers,
     },
   };
-}
+}  */

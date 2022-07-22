@@ -6,11 +6,11 @@ import '../styles/globals.css'
 function MyApp({ Component, pageProps: {session, ...pageProps} }) {
   return (
     <SessionProvider session={session}>
-     {/*  <RecoilRoot> */}
+      <RecoilRoot> 
       {/* <ThemeProvider attribute="class"> */}
         <Component {...pageProps} />
       {/* </ThemeProvider> */}
-      {/* </RecoilRoot> */}
+      </RecoilRoot>
     </SessionProvider>
   )
 }

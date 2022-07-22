@@ -70,8 +70,8 @@ export default function Post({ post }) {
         {/* social icons */}
         <div className="flex justify-between text-graySubTitle">
           <ChatIcon className="h-9 w-9 hoverDot p-2 hover:text-greenColor hover:bg-[#acdbd8]" />
-          <TrashIcon className="h-9 w-9 hoverDot p-2 hover:text-[#f06c6c]  hover:bg-[#f7c2c2]" />
-          <HeartIcon className="h-9 w-9 hoverDot p-2 hover:text-[#f06c6c] hover:bg-[#f7c2c2]" />
+          <TrashIcon className="h-9 w-9 hoverDot p-2 hover:text-[#f06c6c]  hover:bg-[#fe9696]" />
+          <HeartIcon className="h-9 w-9 hoverDot p-2 hover:text-[#f06c6c] hover:bg-[#fe9696]" />
           <ShareIcon className="h-9 w-9 hoverDot p-2 hover:text-greenColor hover:bg-[#acdbd8]" />
           <ChartBarIcon className="h-9 w-9 hoverDot p-2 hover:text-greenColor hover:bg-[#acdbd8]" />
         </div>
