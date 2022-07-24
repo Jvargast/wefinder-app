@@ -44,15 +44,15 @@ export default function LeftSide() {
                 <div className="w-[72px] h-[72px] z-50">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={session.user.image}
+                    src={ session?.user.image}
                     alt="profile"
                     className="rounded-full"
                   />
                 </div>
                 <div className="flex flex-col text-center">
-                  <h4 className="text-sm">{session.user.name}</h4>
+                  <h4 className="text-sm">{session?.user.name}</h4>
                   <span className="text-sm text-[#d6cec2]">
-                    @{session.user.username}
+                    @{session?.user.username}
                   </span>
                 </div>
               </div>
