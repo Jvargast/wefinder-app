@@ -1,4 +1,5 @@
 import Head from "next/head";
+import CommentModal from "../components/CommentModal";
 import Feed from "../components/Feed";
 import LeftSide from "../components/LeftSide";
 import NavbarUser from "../components/NavbarUser";
@@ -20,6 +21,7 @@ export default function Home({newsResults, randomUsersResults}) {
           <Feed/> 
           <Widgets newsResults={newsResults.articles} randomUsersResults={randomUsersResults.results}/> 
           {/* <Modal/> */}
+          <CommentModal/>
         </div>
         
       </main>

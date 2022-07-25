@@ -10,10 +10,13 @@ import spiner from "../assets/spin-loader-icon.svg";
 import { useSession, signOut, getSession } from "next-auth/react";
 import { Skeleton } from "@mui/material";
 import { useRouter } from "next/router";
+import { useRecoilState } from "recoil";
+import { userState } from "../atom/userAtom";
 
 export default function LeftSide() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  //const [currentUser, setCurrentUser] = useRecoilState(userState);
 
   console.log(session, status);
 
@@ -30,18 +33,18 @@ export default function LeftSide() {
   return (
     <>
       {session ? (
-        <div className="ml-5 w-[269.58px] xl:mt-[82px] sm:mt-[82px] hidden xl:inline">
+        <div className="ml-5 w-[280px] xl:mt-[82px] sm:mt-[82px] hidden xl:inline">
           <div className="overflow-hidden mb-2 rounded-md transition-shadow relative border-none shadow-md">
             <div className="pt-3 pr-3 pl-3 pb-4 break-words border-b-[1px] border-[#d6cec2] h-[160.95px] w-[269px]">
-              <div className="h-[54px] -mt-3 -mr-3 -ml-3 mb-0 z-10">
+              <div className="h-[54px] -mt-3 -mr-3 -ml-3 mb-0 -z-10">
                 <Image
                   src={cardbg}
                   alt="bg"
-                  className="[background-position: center] "
+                  className="[background-position: center] -z-10 "
                 />
               </div>
               <div className="flex justify-center flex-col items-center -mt-[38px] mr-auto ml-auto mb-3">
-                <div className="w-[72px] h-[72px] z-50">
+                <div className="w-[72px] h-[72px] z-15">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={ session?.user.image}
