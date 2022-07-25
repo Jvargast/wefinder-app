@@ -26,6 +26,7 @@ import { Skeleton } from "@mui/material";
 import { deleteObject, ref } from "firebase/storage";
 import { useRecoilState } from "recoil";
 import { modalState, postIdState } from "../atom/modalAtom";
+import { useRouter } from "next/router";
 const ReactPlayer = dynamic(() => import("react-player/lazy"), { ssr: false });
 
 const iconStyle = {
@@ -33,27 +34,28 @@ const iconStyle = {
     "invert(33%) sepia(83%) saturate(1212%) hue-rotate(146deg) brightness(95%) contrast(98%)",
 };
 
-export default function Post({ post }) {
+export default function Post({ post, id }) {
   const { data: session, status } = useSession();
   const [likes, setLikes] = useState([]);
   const [comments, setComments] = useState([])
   const [hasLiked, setHasLiked] = useState(false);
   const [open, setOpen] = useRecoilState(modalState);
   const [postId, setPostId] = useRecoilState(postIdState);
+  const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
-      collection(db, "posts", post.id, "likes"),
+      collection(db, "posts", id, "likes"),
       (snapshot) => setLikes(snapshot.docs)
     );
-  }, [post.id]);
+  }, [ id]);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
-      collection(db, "posts", post.id, "comments"),
+      collection(db, "posts", id, "comments"),
       (snapshot) => setComments(snapshot.docs)
     );
-  }, [post.id]);
+  }, [id]);
 
   useEffect(() => {
     setHasLiked(
@@ -63,9 +65,9 @@ export default function Post({ post }) {
 
   async function likePost() {
     if (hasLiked) {
-      await deleteDoc(doc(db, "posts", post.id, "likes", session?.user.userId));
+      await deleteDoc(doc(db, "posts", id, "likes", session?.user.userId));
     } else {
-      await setDoc(doc(db, "posts", post.id, "likes", session?.user.userId), {
+      await setDoc(doc(db, "posts", id, "likes", session?.user.userId), {
         username: session.user.username,
       });
     }
@@ -73,10 +75,11 @@ export default function Post({ post }) {
 
   async function deletePost() {
     if (window.confirm("¿De verdad quires eliminar este artículo?")) {
-      deleteDoc(doc(db, "posts", post.id));
+      deleteDoc(doc(db, "posts", id));
       if (post.data().image) {
-        deleteObject(ref(storage, `posts/${post.id}/image`));
+        deleteObject(ref(storage, `posts/${id}/image`));
       }
+      router.push("/")
     }
   }
 
@@ -88,7 +91,7 @@ export default function Post({ post }) {
           <div className="w-[55px] h-[55px] object-fill mr-4">
             {/* eslint-disable-next-line @next/next/no-img-element*/}
             <img
-              src={post ? post.data().userImg : UserIcon}
+              src={post ? post?.data()?.userImg : UserIcon}
               alt="user"
               className="rounded-full cursor-pointer hover:brightness-95"
             />
@@ -101,10 +104,10 @@ export default function Post({ post }) {
               {/* userinfo */}
               <div className="flex items-center space-x-1 whitespace-nowrap">
                 <h4 className="font-bold text-[15px] sm:text-[16px] hover:underline">
-                  {post.data().name}
+                  {post?.data()?.name}
                 </h4>
                 <span className="text-sm sm:text-[15px]">
-                  @{post.data().username} -{" "}
+                  @{post?.data()?.username} -{" "}
                 </span>
                 <span className="text-sm sm:text-[15px] hover:underline">
                   <Moment fromNow>{post?.data().timestamp?.toDate()}</Moment>
@@ -120,22 +123,22 @@ export default function Post({ post }) {
             </div>
             {/* post text */}
             <p className="text-graySubTitle text-[15px sm:text-[16px] mb-2">
-              {post.data().text}
+              {post?.data()?.text}
             </p>
             {/* post image or video */}
 
             <div className="w-[500px]">
-              {!post.data().image && post.data().video ? (
+              {!post?.data()?.image && post?.data()?.video ? (
                 <ReactPlayer
-                  url={post.data().video}
+                  url={post?.data()?.video}
                   className="overflow-hidden rounded-2xl object-contain"
                   width={"100%"}
                 />
               ) : (
-                post.data().image && (
+                post?.data()?.image && (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
-                    src={post.data().image}
+                    src={post?.data()?.image}
                     alt="shared"
                     className="rounded-2xl"
                   />
@@ -147,7 +150,7 @@ export default function Post({ post }) {
               <div className="flex items-center ">
               <ChatIcon
                 onClick={() => {
-                  setPostId(post.id)
+                  setPostId(id)
                   setOpen(!open);
                 }}
                 className="h-9 w-9 hoverDot p-2 hover:text-greenColor hover:bg-[#acdbd8]"
