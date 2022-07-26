@@ -78,12 +78,12 @@ function Signin() {
             <HeaderLink Icon={OndemandVideoSharpIcon} text="Aprender" />
             <HeaderLink Icon={BusinessCenterIcon} text="Empleos" />
           </div>
-          { providers &&  Object.values(providers).map((provider) => (
+          {providers &&  Object.values(providers).map((provider) => (
             <div key={provider.name}> 
               <div className="pl-4 pr-4">
                 <button
                   className="text-greenColor font-semibold rounded-full border border-greenColor px-5 py-1.5 transition-all hover:border-2"
-                  onClick={() => signIn(provider.id, {callbackUrl:"/"})}
+                  onClick={() => signIn(provider.id,{callbackUrl:"/"} )}
                 >
                   Iniciar sesión {provider.name}
                 </button>

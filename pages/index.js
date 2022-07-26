@@ -1,9 +1,13 @@
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { signIn, useSession } from "next-auth/react";
 import Head from "next/head";
+import { useEffect } from "react";
 import CommentModal from "../components/CommentModal";
 import Feed from "../components/Feed";
 import LeftSide from "../components/LeftSide";
 import NavbarUser from "../components/NavbarUser";
 import Widgets from "../components/Widgets";
+import { db } from "../firebase";
 
 export default function Home({newsResults, randomUsersResults}) {
   return (
@@ -15,12 +19,12 @@ export default function Home({newsResults, randomUsersResults}) {
       </Head>
       
       <main>
-        <NavbarUser/>
+        <NavbarUser/> 
         <div className="flex flex-row min-h-screen max-w-7xl mx-auto">
           <LeftSide />
           <Feed/> 
           <Widgets newsResults={newsResults.articles} randomUsersResults={randomUsersResults.results}/> 
-          {/* <Modal/> */}
+          {/* <Modal/>  */} 
           <CommentModal/>
         </div>
         

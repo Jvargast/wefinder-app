@@ -61,6 +61,7 @@ export default function NavbarUser() {
                   offset={50}
                   duration={500}
                   className="cursor-pointer text-greenColor font-semibold"
+                  onClick={()=> router.push("/")}
                 >
                   <div className="flex flex-col items-center justify-center min-h-[77px] min-w-[60px] leading-[1.5] hoverEffect xl:min-w-[80px]">
                     <div className="w-6 h-6 ">
@@ -114,11 +115,12 @@ export default function NavbarUser() {
 
                 <Link
                   activeClass="mensajes"
-                  to="mensajes"
+                  to="/chat"
                   smooth={true}
                   offset={50}
                   duration={500}
                   className="cursor-pointer text-greenColor hover:text-white  rounded-md text-sm font-medium"
+                  onClick={()=> router.push("/chat")}
                 >
                   <div className="flex flex-col items-center justify-center min-h-[77px] min-w-[80px] leading-[1.5] hoverEffect ">
                     <div className="w-6 h-6 ">
@@ -139,7 +141,7 @@ export default function NavbarUser() {
                     <div className="w-7 h-7">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
-                        src={session ?  session.user.image: UserIcon}
+                        src={session?.user?.image}
                         className="h-7 w-7 rounded-full"
                         alt="nav"
                       />

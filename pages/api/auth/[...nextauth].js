@@ -1,14 +1,28 @@
-import NextAuth from "next-auth"
+import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import EmailProvider from "next-auth/providers/email";
-import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
-import clientPromise from "../../../lib/mongodb";
+import { FirestoreAdapter } from "@next-auth/firebase-adapter";
+import {
+  collection,
+  query,
+  getDocs,
+  where,
+  limit,
+  doc,
+  getDoc,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  runTransaction,
+} from "firebase/firestore";
+
+import { db } from "../../../firebase";
+
 export default NextAuth({
   // Configure one or more authentication providers
   providers: [
     GoogleProvider({
-        clientId: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      clientId: "46096713211-j602c0qo0igfshau6u4btdts7039u9or.apps.googleusercontent.com",
+      clientSecret: "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",
     }),
     /* EmailProvider({
         server: {
@@ -25,7 +39,6 @@ export default NextAuth({
     // ...add more providers here
   ],
   secret: process.env.JWT_SECRET,
-  /* adapter: MongoDBAdapter(clientPromise) */
   pages: {
     signIn: "/auth/Signin",
   },
@@ -33,11 +46,14 @@ export default NextAuth({
     strategy: "jwt",
   },
   callbacks: {
-    async session({session,token}){
-      session.user.username = session.user.name.split(" ").join("").toLowerCase();
-      session.user.userId = token.sub
+    async session({ session, token }) {
+      session.user.username = session.user.name
+        .split(" ")
+        .join("")
+        .toLowerCase();
+      session.user.userId = token.sub;
 
-      return session
-    }
-  }
-})
+      return session;
+    },
+  },
+});

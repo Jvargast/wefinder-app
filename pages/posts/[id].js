@@ -5,17 +5,41 @@ import LeftSide from "../../components/LeftSide";
 import NavbarUser from "../../components/NavbarUser";
 import Widgets from "../../components/Widgets";
 import { useRouter } from "next/router";
-import IndividualPost from "../../components/Post"; 
+import IndividualPost from "../../components/Post";
 import { useEffect, useState } from "react";
-import { doc, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import { db } from "../../firebase";
+import Comment from "../../components/Comment";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function Post({ newsResults, randomUsersResults }) {
   const router = useRouter();
-  const {id} = router.query;
+  const { id } = router.query;
   const [post, setPost] = useState();
+  const [comments, setComments] = useState([]);
 
-  useEffect(()=> onSnapshot(doc(db,"posts",id), (snapshot)=> setPost(snapshot)),[id])
+  useEffect(
+    () => onSnapshot(doc(db, "posts", id), (snapshot) => setPost(snapshot)),
+    [id]
+  );
+
+  //Get comments
+  useEffect(() => {
+    onSnapshot(
+      query(
+        collection(db, "posts", id, "comments"),
+        orderBy("timestamp", "desc")
+      ),
+      (snapshot) => setComments(snapshot.docs)
+    );
+  }, [id]);
+
   return (
     <div>
       <Head>
@@ -31,14 +55,36 @@ export default function Post({ newsResults, randomUsersResults }) {
           {/* <IndividualPost/> */}
           <div className="xl:ml-[20px] xl:min-w-[576px] border-l border-r sm:ml-[73px] xl:mt-[82px] sm:mt-[82px] flex-grow max-w-xl border-[#d6cec2]">
             <div className="sticky items-center space-x-2 flex py-2 px-3 top-[4.5rem] z-50 bg-white border-b border-[#e3dfd9]">
-              <div className="hoverEffect" onClick={()=>router.push("/")}>
-                <ArrowLeftIcon className="h-5"/>
+              <div className="hoverEffect" onClick={() => router.push("/")}>
+                <ArrowLeftIcon className="h-5" />
               </div>
               <h2 className="text-lg sm:text-xl font-bold cursor-pointer">
                 Publicación
               </h2>
             </div>
-            <IndividualPost id={id} post={post}/>
+            <IndividualPost id={id} post={post} />
+            {comments.length > 0 && (
+            <div className="">
+              <AnimatePresence>
+                {comments.map((comment) => (
+                  <motion.div
+                    key={comment.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 1 }}
+                  >
+                    <Comment
+                      key={comment.id}
+                      commentId={comment.id}
+                      originalPostId={id}
+                      comment={comment.data()}
+                    />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          )}
           </div>
 
           <Widgets

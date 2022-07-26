@@ -18,8 +18,6 @@ export default function LeftSide() {
   const router = useRouter();
   //const [currentUser, setCurrentUser] = useRecoilState(userState);
 
-  console.log(session, status);
-
   if (status === "loading") {
     return (
       <div className="w-[60px] h-[60px]">
@@ -30,9 +28,10 @@ export default function LeftSide() {
   if (status === "unauthenticated") {
     router.push("/auth/Signin");
   }
+  console.log(session)
   return (
     <>
-      {session ? (
+      {status === 'authenticated'  ? (
         <div className="ml-5 w-[280px] xl:mt-[82px] sm:mt-[82px] hidden xl:inline">
           <div className="overflow-hidden mb-2 rounded-md transition-shadow relative border-none shadow-md">
             <div className="pt-3 pr-3 pl-3 pb-4 break-words border-b-[1px] border-[#d6cec2] h-[160.95px] w-[269px]">
@@ -47,7 +46,7 @@ export default function LeftSide() {
                 <div className="w-[72px] h-[72px] z-15">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={ session?.user.image}
+                    src={session?.user.image}
                     alt="profile"
                     className="rounded-full"
                   />

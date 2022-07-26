@@ -85,13 +85,13 @@ export default function Post({ post, id }) {
 
   return (
     <>
-      {session ? (
+      {session?.user ? (
         <div className="flex p-3 cursor-pointer border-b border-[#c8bfbfc2]">
           {/* Image */}
           <div className="w-[55px] h-[55px] object-fill mr-4">
             {/* eslint-disable-next-line @next/next/no-img-element*/}
             <img
-              src={post ? post?.data()?.userImg : UserIcon}
+              src={post?.data()?.userImg}
               alt="user"
               className="rounded-full cursor-pointer hover:brightness-95"
             />
@@ -160,7 +160,7 @@ export default function Post({ post, id }) {
               )}
               </div>
               
-              {session?.user.userId === post?.data().id && (
+              {session?.user.userId === post?.data()?.id && (
                 <TrashIcon
                   onClick={deletePost}
                   className="h-9 w-9 hoverDot p-2 hover:text-[#f06c6c]  hover:bg-[#fe9696]"
