@@ -7,7 +7,7 @@ import cardbg from "../assets/card-bg.svg";
 import plus from "../assets/plus-icon.svg";
 
 import spiner from "../assets/spin-loader-icon.svg";
-import { useSession, signOut, getSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { Skeleton } from "@mui/material";
 import { useRouter } from "next/router";
 import { useRecoilState } from "recoil";
@@ -28,7 +28,7 @@ export default function LeftSide() {
   if (status === "unauthenticated") {
     router.push("/auth/Signin");
   }
-  console.log(session)
+
   return (
     <>
       {status === 'authenticated'  ? (

@@ -41,7 +41,6 @@ export default function NavbarUser() {
   if (status === "unauthenticated") {
     router.push("/auth/Signin");
   }
-  
 
   return (
     <div className="sm:block fixed z-[100] pr-6 pl-6 pt-0 pb-0 bg-[#98C5DA] shadow-sm w-full">
@@ -151,7 +150,7 @@ export default function NavbarUser() {
                   <div className={active ?  `absolute top-[80px] rigth-[30px] bg-white shadow-lg px-3 py-3`:`hidden  before:content-[''] before:absolute before:top-0`}>
                     <ul>
                         <li className="text-[#000] hover:text-[#c1ebeb] mb-1">Perfil</li>
-                        <li onClick={()=> signOut()} className="cursor-pointer text-[#000] hover:text-[#c1ebeb]">Cerrar Sesión</li>
+                        <li onClick={signOut} className="cursor-pointer text-[#000] hover:text-[#c1ebeb]">Cerrar Sesión</li>
                     </ul>
                   </div>
                 </li>

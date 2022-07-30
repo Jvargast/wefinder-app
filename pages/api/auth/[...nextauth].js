@@ -15,7 +15,7 @@ import {
   runTransaction,
 } from "firebase/firestore";
 
-import { db } from "../../../firebase";
+/* import { db } from "../../../firebase"; */
 
 export default NextAuth({
   // Configure one or more authentication providers
@@ -38,6 +38,25 @@ export default NextAuth({
 
     // ...add more providers here
   ],
+  adapter:FirestoreAdapter({
+    apiKey: "AIzaSyDqVtvYengYuutWowX4Y3y8Xid9d1CnTCI",
+  authDomain: "wefinder-app.firebaseapp.com",
+  projectId: "wefinder-app",
+  storageBucket: "wefinder-app.appspot.com",
+  messagingSenderId: "46096713211",
+  appId: "1:46096713211:web:0754cd61c8153b0bdab75e",
+    collection,
+    query,
+    getDocs,
+  where,
+  limit,
+  doc,
+  getDoc,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  runTransaction,
+  }),
   secret: process.env.JWT_SECRET,
   pages: {
     signIn: "/auth/Signin",
@@ -52,6 +71,7 @@ export default NextAuth({
         .join("")
         .toLowerCase();
       session.user.userId = token.sub;
+      session.user.isOnline = true
 
       return session;
     },

@@ -1,9 +1,13 @@
+import { collection, doc, getDoc, getDocs, onSnapshot, orderBy } from "firebase/firestore";
 import Head from "next/head";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import NavbarUser from "../components/NavbarUser";
 import SidebarChat from "../components/SidebarChat";
+import { db } from "../firebase";
+import styled from "styled-components";
 
-export default function chat() {
+export default function Chat() {
+
   return (
     <div>
       <Head>
@@ -13,10 +17,16 @@ export default function chat() {
       </Head>
       <main>
         <NavbarUser />
-        <div className="flex flex-row min-h-screen max-w-7xl mx-auto">
+        <div className="flex flex-row  max-w-7xl mx-auto">
             <SidebarChat/> 
+            <Backgroud/>
         </div>
       </main>
     </div>
   );
 }
+
+const Backgroud = styled.div`
+  background-color: whitesmoke;
+  width: 100%;
+`;
