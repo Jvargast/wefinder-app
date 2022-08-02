@@ -23,7 +23,7 @@ export default function Home({newsResults, randomUsersResults}) {
         <div className="flex flex-row min-h-screen max-w-7xl mx-auto">
           <LeftSide />
           <Feed/>
-          <Widgets newsResults={newsResults.articles} randomUsersResults={randomUsersResults.results}/>  
+          {/* <Widgets newsResults={newsResults.articles} randomUsersResults={randomUsersResults.results}/>   */}
           <CommentModal/>
         </div>
         
@@ -35,7 +35,7 @@ export default function Home({newsResults, randomUsersResults}) {
 //https://saurav.tech/NewsAPI/top-headlines/category/bussiness/us.json
 
 
-export async function getServerSideProps() {
+/* export async function getServerSideProps() {
   const newsResults = await fetch(
     "https://saurav.tech/NewsAPI/top-headlines/category/business/us.json"
   ).then((res) => res.json());
@@ -52,4 +52,4 @@ export async function getServerSideProps() {
       randomUsersResults,
     },
   };
-}
+} */

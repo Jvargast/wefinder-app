@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import UserIcon from "../assets/user.svg";
 import elipsis from "../assets/elipsis-icon.svg";
 
@@ -27,6 +27,7 @@ import { deleteObject, ref } from "firebase/storage";
 import { useRecoilState } from "recoil";
 import { modalState, postIdState } from "../atom/modalAtom";
 import { useRouter } from "next/router";
+import Comments from "./Comments";
 const ReactPlayer = dynamic(() => import("react-player/lazy"), { ssr: false });
 
 const iconStyle = {
@@ -37,9 +38,11 @@ const iconStyle = {
 export default function Post({ post, id }) {
   const { data: session, status } = useSession();
   const [likes, setLikes] = useState([]);
-  const [comments, setComments] = useState([])
+  //Comment
+  const commentInput = useRef(null);
+  const handleFocus = () => commentInput.current.focus();
+
   const [hasLiked, setHasLiked] = useState(false);
-  const [open, setOpen] = useRecoilState(modalState);
   const [postId, setPostId] = useRecoilState(postIdState);
   const router = useRouter();
 
@@ -49,13 +52,6 @@ export default function Post({ post, id }) {
       (snapshot) => setLikes(snapshot.docs)
     );
   }, [ id]);
-
-  useEffect(() => {
-    const unsubscribe = onSnapshot(
-      collection(db, "posts", id, "comments"),
-      (snapshot) => setComments(snapshot.docs)
-    );
-  }, [id]);
 
   useEffect(() => {
     setHasLiked(
@@ -86,7 +82,7 @@ export default function Post({ post, id }) {
   return (
     <>
       {session?.user ? (
-        <div className="flex p-3 cursor-pointer border-b border-[#c8bfbfc2]">
+        <div className="flex p-3 border-b border-[#c8bfbfc2]">
           {/* Image */}
           <div className="w-[55px] h-[55px] object-fill mr-4">
             {/* eslint-disable-next-line @next/next/no-img-element*/}
@@ -149,15 +145,14 @@ export default function Post({ post, id }) {
             <div className="flex justify-between text-graySubTitle">
               <div className="flex items-center ">
               <ChatIcon
-                onClick={() => {
-                  setPostId(id)
-                  setOpen(!open);
-                }}
                 className="h-9 w-9 hoverDot p-2 hover:text-greenColor hover:bg-[#acdbd8]"
+                onClick={handleFocus}
+                onKeyDown={(event)=> {
+                  if(event.key === 'Enter') {
+                    handleFocus()
+                  }
+                }}
               />
-              {comments.length > 0 && (
-                <span className="text-sm">{comments.length}</span>
-              )}
               </div>
               
               {session?.user.userId === post?.data()?.id && (
@@ -188,6 +183,7 @@ export default function Post({ post, id }) {
               <ShareIcon className="h-9 w-9 hoverDot p-2 hover:text-greenColor hover:bg-[#acdbd8]" />
               <ChartBarIcon className="h-9 w-9 hoverDot p-2 hover:text-greenColor hover:bg-[#acdbd8]" />
             </div>
+            <Comments docId={id} comments={post.data().comments} commentInput={commentInput}/>
           </div>
         </div>
       ) : (

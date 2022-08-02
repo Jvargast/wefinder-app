@@ -15,14 +15,8 @@ import JobsIcon from "../assets/nav-jobs.svg";
 import MesIcon from "../assets/nav-messaging.svg";
 import WorkIcon from "../assets/nav-work.svg";
 import spiner from "../assets/spin-loader-icon.svg";
+import { Avatar } from "@mui/material";
 
-
-const navigation = [
-  { name: "Dashboard", href: "#", current: true },
-  { name: "Team", href: "#", current: false },
-  { name: "Projects", href: "#", current: false },
-  { name: "Calendar", href: "#", current: false },
-];
 
 export default function NavbarUser() {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,6 +34,10 @@ export default function NavbarUser() {
   }
   if (status === "unauthenticated") {
     router.push("/auth/Signin");
+  }
+
+  const enterProfile = () => {
+    router.push(`/profile/${session?.user?.userId}`)
   }
 
   return (
@@ -75,11 +73,12 @@ export default function NavbarUser() {
                 </Link>
                 <Link
                   activeClass="redes"
-                  to="redes"
+                  to="/redes"
                   smooth={true}
                   offset={50}
                   duration={500}
                   className="cursor-pointer text-greenColor hover:text-white rounded-md text-sm font-medium"
+                  onClick={()=> router.push("/red")}
                 >
                   <div className="flex flex-col items-center justify-center min-h-[77px] min-w-[80px] leading-[1.5] hoverEffect ">
                     <div className="w-6 h-6 ">
@@ -137,19 +136,15 @@ export default function NavbarUser() {
                   onClick={()=>setActive(!active)}
                 >
                   <div className="flex flex-col items-center justify-center min-h-[77px] min-w-[80px] leading-[1.5] hoverEffect ">
-                    <div className="w-7 h-7">
+                    
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={session?.user?.image}
-                        className="h-7 w-7 rounded-full"
-                        alt="nav"
-                      />
-                    </div>
-                    <span className="text-md">Yo</span>
+                      {session ?  (<Avatar className="cursor-pointer hover:opacity-80" src={session ? session?.user.image: null} alt={session?.user?.email} />): <Avatar className="cursor-pointer hover:opacity-80"/>}
+                    
+                    <span className="text-sm">Yo</span>
                   </div>
                   <div className={active ?  `absolute top-[80px] rigth-[30px] bg-white shadow-lg px-3 py-3`:`hidden  before:content-[''] before:absolute before:top-0`}>
                     <ul>
-                        <li className="text-[#000] hover:text-[#c1ebeb] mb-1">Perfil</li>
+                        <li className="text-[#000] hover:text-[#c1ebeb] mb-1" onClick={enterProfile}>Perfil</li>
                         <li onClick={signOut} className="cursor-pointer text-[#000] hover:text-[#c1ebeb]">Cerrar Sesión</li>
                     </ul>
                   </div>

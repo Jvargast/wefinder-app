@@ -20,8 +20,9 @@ import {
 } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useCollection } from "react-firebase-hooks/firestore";
+import styled from "styled-components";
 import TimeAgo from "timeago-react";
 import { db } from "../firebase";
 import { getReceipmentEmail } from "./Chat";
@@ -31,7 +32,9 @@ function ChatScreen({ chat, messages }) {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [input, setInput] = useState("");
+  const endOfMessagesRef = useRef(null);
   const [messag, setMessag] = useState([]);
+
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
@@ -41,6 +44,16 @@ function ChatScreen({ chat, messages }) {
   }, [router.query.id]);
   const recipientEmail = getReceipmentEmail(chat.users, session ? session.user:null)
   const [recipientSnapshot] = useCollection(query(collection(db, "users"),where("email","==",recipientEmail )))
+
+  
+  const scrollToBottom = () => {
+    endOfMessagesRef.current?.scrollIntoView({ behavior: 'smooth', block:"start" })
+  }
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [messag]);
+
   const sendMesssage = async (e) => {
     e.preventDefault();
     await setDoc(doc(db, "users", session ? session?.user.userId : null), {
@@ -53,6 +66,7 @@ function ChatScreen({ chat, messages }) {
       photoURL: session?.user?.image,
     });
     setInput("");
+    scrollToBottom();
   };
   const recipient = recipientSnapshot?.docs?.[0].data()
   return (
@@ -75,9 +89,12 @@ function ChatScreen({ chat, messages }) {
       <div className="container p-8 bg-[#e5ded8] min-h-[70vh]">
         <div>
           { messag.length >0 && messag.map((item, i) => (
+            <>
             <Message key={i} item={item} />
+            
+            </>
           )) }
-          <div />
+          <EndOfMessage ref={endOfMessagesRef}/>
         </div>
       </div>
       <div className="input-container flex items-center p-3 stick bottom-0 bg-graySubTitle z-50">
@@ -94,5 +111,8 @@ function ChatScreen({ chat, messages }) {
     </div>
   );
 }
+
+const EndOfMessage = styled.div`
+`;
 
 export default ChatScreen;
