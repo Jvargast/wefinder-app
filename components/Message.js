@@ -2,10 +2,11 @@ import moment from 'moment';
 import { useSession } from 'next-auth/react';
 import React from 'react';
 import styled from 'styled-components';
+import { useAuth } from '../context/AuthContext';
 
 function Message({item}) {
-  const {data:session} = useSession()
-  const TypeOfMessage = item._document.data.value.mapValue.fields.user.stringValue === (session ? session.user.email : null) ? Sender : Reciever;
+  const {user} = useAuth();
+  const TypeOfMessage = item._document.data.value.mapValue.fields.user.stringValue === (user ? user.email : null) ? Sender : Reciever;
   return (
     <div>
         <TypeOfMessage>
@@ -31,7 +32,7 @@ const MessageElement = styled.div`
 
 const Sender = styled(MessageElement)`
     margin-left: auto;
-    background-color: #dcf8c6;
+    background-color: #0AD5BF;
 `;
 
 const Reciever = styled(MessageElement)`

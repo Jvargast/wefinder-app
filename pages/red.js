@@ -2,8 +2,10 @@ import Head from 'next/head'
 import React from 'react'
 import NavbarUser from '../components/NavbarUser'
 import Network from '../components/Network'
+import { useAuth } from '../context/AuthContext';
 
 export default function Red() {
+  const {user, logOut} = useAuth();
   return (
     <div>
       <Head>
@@ -12,9 +14,9 @@ export default function Red() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <NavbarUser />
-        <div className="flex flex-row  max-w-7xl mx-auto">
-            <Network />
+        <NavbarUser user={user} logOut={logOut}/>
+        <div className="flex flex-row  max-w-7xl mx-auto border-b border-graySubTitle">
+            <Network className=""/>
         </div>
       </main>
     </div>

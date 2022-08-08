@@ -1,13 +1,12 @@
-import { collection, doc, getDoc, getDocs, onSnapshot, orderBy } from "firebase/firestore";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import NavbarUser from "../components/NavbarUser";
 import SidebarChat from "../components/SidebarChat";
-import { db } from "../firebase";
 import styled from "styled-components";
+import { useAuth } from "../context/AuthContext";
 
 export default function Chat() {
-
+  const {user, logOut} = useAuth();
   return (
     <div>
       <Head>
@@ -16,9 +15,9 @@ export default function Chat() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <NavbarUser />
+        <NavbarUser user={user} logOut={logOut}/>
         <div className="flex flex-row  max-w-7xl mx-auto">
-            <SidebarChat/> 
+            <SidebarChat user={user}/> 
             <Backgroud/>
         </div>
       </main>

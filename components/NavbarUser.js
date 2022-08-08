@@ -1,9 +1,7 @@
 import { Transition, Disclosure } from "@headlessui/react";
 import Image from "next/image";
-import { Link } from "react-scroll";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSession, getSession } from "next-auth/react";
-import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 
 //Icons
@@ -16,29 +14,34 @@ import MesIcon from "../assets/nav-messaging.svg";
 import WorkIcon from "../assets/nav-work.svg";
 import spiner from "../assets/spin-loader-icon.svg";
 import { Avatar } from "@mui/material";
+import Link from "next/link";
+import { auth } from "../firebase";
+import { useAuth } from "../context/AuthContext";
+import { getUserByUserId } from "../services/firebase";
 
 
-export default function NavbarUser() {
+export default function NavbarUser({user, logOut}) {
   const [isOpen, setIsOpen] = useState(false);
   const [active, setActive] = useState(false);
-
-  const { data: session, status } = useSession();
   const router = useRouter();
+  const [activeUser, setActiveUser] = useState({});
+  //obtener perfil por uid
 
-  if (status === "loading") {
-    return (
-      <div className="w-[60px] h-[60px]">
-        <Image src={spiner} alt="spin" className="" />
-      </div>
-    );
-  }
-  if (status === "unauthenticated") {
-    router.push("/auth/Signin");
-  }
+  useEffect(()=> {
+    async function getUser(){
+        if(user){
+          const [{username}]= await getUserByUserId(user.uid);
+          setActiveUser(username);
+        }
+        
+      }
+    getUser()
+  },[user])
 
   const enterProfile = () => {
-    router.push(`/profile/${session?.user?.userId}`)
+    router.push(`/p/${activeUser}`)
   }
+
 
   return (
     <div className="sm:block fixed z-[100] pr-6 pl-6 pt-0 pb-0 bg-[#98C5DA] shadow-sm w-full">
@@ -46,19 +49,18 @@ export default function NavbarUser() {
         <div className="flex items-center h-20 md:w-full">
           {/*LOGO */}
           <div className="flex items-center mx-20 justify-between w-full">
-            <div className="flex justify-center items-center flex-shrink-0">
+            <div className="flex justify-center items-center flex-shrink-0" onClick={()=> router.push("/dashboard")}>
               <Image src={logo} alt="logo" className="mr-5" />
             </div>
             <div className="hidden md:block space-x-0 md:space-x-4">
               <div className="flex items-center">
                 <Link
                   activeClass="inicio"
-                  to="inicio"
+                  href="/dashboard"
                   smooth={true}
                   offset={50}
                   duration={500}
                   className="cursor-pointer text-greenColor font-semibold"
-                  onClick={()=> router.push("/")}
                 >
                   <div className="flex flex-col items-center justify-center min-h-[77px] min-w-[60px] leading-[1.5] hoverEffect xl:min-w-[80px]">
                     <div className="w-6 h-6 ">
@@ -73,12 +75,11 @@ export default function NavbarUser() {
                 </Link>
                 <Link
                   activeClass="redes"
-                  to="/redes"
+                  href="/red"
                   smooth={true}
                   offset={50}
                   duration={500}
                   className="cursor-pointer text-greenColor hover:text-white rounded-md text-sm font-medium"
-                  onClick={()=> router.push("/red")}
                 >
                   <div className="flex flex-col items-center justify-center min-h-[77px] min-w-[80px] leading-[1.5] hoverEffect ">
                     <div className="w-6 h-6 ">
@@ -93,7 +94,8 @@ export default function NavbarUser() {
                 </Link>
                 <Link
                   activeClass="trabajos"
-                  to="trabajos"
+                  href="/trabajos"
+                  aria-disabled={true}
                   smooth={true}
                   offset={50}
                   duration={500}
@@ -113,12 +115,11 @@ export default function NavbarUser() {
 
                 <Link
                   activeClass="mensajes"
-                  to="/chat"
+                  href="/chat"
                   smooth={true}
                   offset={50}
                   duration={500}
                   className="cursor-pointer text-greenColor hover:text-white  rounded-md text-sm font-medium"
-                  onClick={()=> router.push("/chat")}
                 >
                   <div className="flex flex-col items-center justify-center min-h-[77px] min-w-[80px] leading-[1.5] hoverEffect ">
                     <div className="w-6 h-6 ">
@@ -138,21 +139,24 @@ export default function NavbarUser() {
                   <div className="flex flex-col items-center justify-center min-h-[77px] min-w-[80px] leading-[1.5] hoverEffect ">
                     
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      {session ?  (<Avatar className="cursor-pointer hover:opacity-80" src={session ? session?.user.image: null} alt={session?.user?.email} />): <Avatar className="cursor-pointer hover:opacity-80"/>}
+                      {user ?  (<Avatar className="cursor-pointer hover:opacity-80" src={user.photo} alt={user.email} />): <Avatar className="cursor-pointer hover:opacity-80"/>}
                     
                     <span className="text-sm">Yo</span>
                   </div>
                   <div className={active ?  `absolute top-[80px] rigth-[30px] bg-white shadow-lg px-3 py-3`:`hidden  before:content-[''] before:absolute before:top-0`}>
                     <ul>
                         <li className="text-[#000] hover:text-[#c1ebeb] mb-1" onClick={enterProfile}>Perfil</li>
-                        <li onClick={signOut} className="cursor-pointer text-[#000] hover:text-[#c1ebeb]">Cerrar Sesión</li>
+                        <li onClick={() => {
+                    logOut();
+                    auth.signOut();
+                    router.push('/')}} className="cursor-pointer text-[#000] hover:text-[#c1ebeb]" >Cerrar Sesión</li>
                     </ul>
                   </div>
                 </li>
                 
                 <Link
                   activeClass="vitrina"
-                  to="vitrina"
+                  href="vitrina"
                   smooth={true}
                   offset={50}
                   duration={500}
@@ -230,9 +234,9 @@ export default function NavbarUser() {
         <div className="sm:hidden pb-5" id="mobile-menu">
           <div className="bg-white px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <Link
-              href="/"
+              href="/dashboard"
               activeClass="home"
-              to="/"
+              to="/dashboard"
               smooth={true}
               offset={50}
               duration={500}

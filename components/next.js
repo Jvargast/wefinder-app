@@ -75,5 +75,21 @@ export default NextAuth({
 
       return session;
     },
+    async signIn({user,account,profile,isNewUser}){
+      if(isNewUser){
+        profile.followers =[];
+        profile.following =[];
+      }
+      
+    }
   },
+  events:{
+    /* signIn:({user,account, profile, isNewUser}) => {
+      if(isNewUser) {
+        console.log("es nuevo:",isNewUser);
+        console.log("perfil: ",profile);
+        console.log("usuario: ",user);
+      }
+    } */
+  }
 });

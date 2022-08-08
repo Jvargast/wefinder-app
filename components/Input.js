@@ -22,6 +22,8 @@ import {
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { async } from "@firebase/util";
+import { useAuth } from "../context/AuthContext";
+import { getUserByUserId } from "../services/firebase";
 
 const iconStyle = {
   filter:
@@ -29,35 +31,44 @@ const iconStyle = {
 };
 
 export default function Input() {
-  const { data: session, status } = useSession();
+  /* const { data: session, status } = useSession(); */
+  const {user} = useAuth();
   const router = useRouter();
   const filePickerRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const [input, setInput] = useState("");
+  const [activeUser, setActiveUser] = useState({});
 
-  if (status === "loading") {
-    return (
-      <div className="w-[60px] h-[60px]">
-        <Image src={spiner} alt="spin" className="" />
-      </div>
-    );
-  }
-  if (status === "unauthenticated") {
-    router.push("/auth/Signin");
-  }
+  useEffect(() => {
+    async function getUserObjByUserId() {
+      if(user){
+        const [userGet] = await getUserByUserId(user.uid);
+        setActiveUser(userGet);
+      }
+      
+    }
+
+    if (user) {
+      getUserObjByUserId(user.uid);
+    }
+  }, [user]);
 
   const sendPost = async () => {
     if (loading) return;
     setLoading(true);
+
+  
     const docRef = await addDoc(collection(db, "posts"), {
-      id: session.user.userId,
+      id: user.uid,
       text: input,
-      userImg: session.user.image,
+      userImg: user.photo,
       timestamp: serverTimestamp(),
-      name: session.user.name,
-      username: session.user.username,
+      name: user.displayName,
+      username: activeUser.username,
+      comments:[],
+      likes:[]
     });
 
     const imageRef = ref(storage, `posts/${docRef.id}/image`);
@@ -85,14 +96,14 @@ export default function Input() {
 
   return (
     <>
-      {session ? (
+      {user ? (
         <div className="flex border-b border-[#c8bfbfc2] p-3 space-x-3 flex-col">
           <div className="w-[72px] h-[72px]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={session.user.image}
+              src={user.photo}
               alt="user"
-              className="rounded-full cursor-pointer hover:brightness-95"
+              className="rounded-full cursor-pointer hover:brightness-95 w-full h-full"
             />
           </div>
           <div className="w-full ">
@@ -195,7 +206,7 @@ export default function Input() {
   );
 }
 
-export const getServerSideProps = async (context) => {
+/* export const getServerSideProps = async (context) => {
   const session = await getSession(context);
 
   if (!session) {
@@ -209,4 +220,4 @@ export const getServerSideProps = async (context) => {
       session,
     },
   };
-};
+}; */

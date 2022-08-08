@@ -3,48 +3,47 @@ import Link from "next/link";
 import { db } from "../firebase";
 import { arrayUnion, doc, setDoc } from "firebase/firestore";
 import { useSession } from "next-auth/react";
+import { useAuth } from "../context/AuthContext";
 
 export default function Comments({
   docId,
   comments: allComments,
   commentInput,
 }) {
-  const {data:session} = useSession();
+  const {user} = useAuth();
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState(allComments);
   const [commentsSlice, setCommentsSlice] = useState(3);
 
   const showNextComents = () => {
-    console.log(commentsSlice)
     setCommentsSlice(commentsSlice+ 3);
   }
   
 
   const handleSubmitComment = async(e) => {
     e.preventDefault();
-    setComments([...comments,{displayName: session?.user.username, comment}]);
+    setComments([...comments,{displayName: user.displayName, comment}]);
     await setDoc(doc(db, "posts", docId), {
-        comments: arrayUnion({ displayName:session?.user.username, comment:comment, createdAt: new Date().toString() }),
+        comments: arrayUnion({ displayName:user.displayName, comment:comment, createdAt: new Date().toString() }),
       },{merge:true});
     setComment("");
   };
-
   return (
     <>
       <div className="p-4 pt-1 pb-4">
-        {comments.length >= 3 && commentsSlice < comments.length && (
+        {comments?.length >= 3 && commentsSlice < comments.length && (
           <p className="text-sm text-[#8d8989] mb-1 cursor-pointer" onClick={showNextComents} onKeyDown={(event) => {
             if(event.key === 'Enter') {
                 showNextComents();
             }
           }}>
-            Ver más comentarios
+            Ver los {comments.length} comentarios
           </p>
         )}
-        {comments.slice(0, commentsSlice).map((item, i) => (
+        {comments?.slice(0, commentsSlice).map((item, i) => (
           <p key={i} className="mb-1">
             <Link href={`p/${item.displayName}`} className="cursor-pointer">
-              <span className="mr-1 font-bold">{item.displayName}</span>
+              <span className="mr-1 font-bold cursor-pointer">{item.displayName}</span>
             </Link>
             <span>{item.comment}</span>
           </p>

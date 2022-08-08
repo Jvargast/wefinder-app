@@ -6,19 +6,20 @@ import { getReceipmentEmail } from "../../components/Chat";
 import ChatScreen from "../../components/ChatScreen";
 import NavbarUser from "../../components/NavbarUser";
 import SidebarChat from "../../components/SidebarChat";
+import { useAuth } from "../../context/AuthContext";
 import { db } from "../../firebase";
 
 export default function Chat({chat, messages}) {
-  const {data:session, status} = useSession();
+  const {user, logOut} = useAuth();
   return (
     <div>
       <Head>
-        <title>WefinderChat con {getReceipmentEmail(chat.users, session ? session.user:null)}</title>
+        <title>WefinderChat con {getReceipmentEmail(chat.users, user ? user:null)}</title>
       </Head>
       <main>
-        <NavbarUser/>
+        <NavbarUser user={user} logOut={logOut}/>
         <div className="flex flex-row min-h-screen max-w-7xl mx-auto">
-            <SidebarChat />
+            <SidebarChat user={user}/>
             <div className="flex-1 overflow-scroll h-[90vh] ">
                  <ChatScreen chat={chat} messages={messages}/>
             </div>

@@ -8,16 +8,14 @@ import { addDoc, collection, doc, getDoc, getDocs, onSnapshot, query, setDoc, wh
 import { getSession, useSession } from "next-auth/react";
 import { useCollection } from 'react-firebase-hooks/firestore';
 import Chat from "./Chat";
+import { useAuth } from "../context/AuthContext";
 
 
-export default function SidebarChat() {
-
-  const {data:session, status} = useSession();
-  const [user, setUser] = useState(null);
-
+export default function SidebarChat({user}) {
+  const [userState, setUserState] = useState(null);
   const colRef = collection(db, "chats");
     //const result = await getDocs(query(colRef, where('users', 'array-contains', session.user.email)));
-  const q1= query(colRef, where("users", "array-contains", session ? session.user.email:null));
+  const q1= query(colRef, where("users", "array-contains", user ? user.email:null));
   const [chatSnapshot, loading, error] = useCollection(q1);
 
   
@@ -26,14 +24,14 @@ export default function SidebarChat() {
 const createChat = async() => {
     const input = prompt('Ingresa un email para conversar');
     if(!input) return null;
-    if(EmailValidator.validate(input) && !chatAlreadyExist(input) && input !== session?.user?.email ) {
+    if(EmailValidator.validate(input) && !chatAlreadyExist(input) && input !== user?.email ) {
       console.log("valido")
         await addDoc(
             collection(
               db,
               "chats"),
             {
-              users:[session?.user?.email, input]
+              users:[user?.email, input]
             }
           );
     } 
@@ -43,9 +41,9 @@ const createChat = async() => {
   const chatAlreadyExist = (recipientEmail) => !!chatSnapshot?.docs.find((chat) => chat.data().users.find((user) => user === recipientEmail)?.length > 0)
   
   return (
-    <div className="mt-[82px] flex-[0.45] h-[90vh] min-w-[300px] max-w-[350px] overflow-y-scroll">
+    <div className="mt-[82px] flex-[0.45] h-[90vh] min-w-[350px] max-w-[380px] overflow-y-scroll">
       <div className="flex sticky top-0 bg-white z-10 justify-between items-center h-[80px] border-b border-graySubTitle pl-2">
-        {session ?  (<Avatar className="cursor-pointer hover:opacity-80" src={session ? session?.user.image: null} alt={session?.user?.email} />): <Avatar className="cursor-pointer hover:opacity-80"/>}
+        {user ?  (<Avatar className="cursor-pointer hover:opacity-80" src={user ? user.photo: null} alt={user.email} />): <Avatar className="cursor-pointer hover:opacity-80"/>}
         <div className="flex flex-row items-center">
 
             <div className="w-7 h-7 flex items-center justify-center">

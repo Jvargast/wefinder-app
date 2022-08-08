@@ -11,27 +11,16 @@ import { useSession } from "next-auth/react";
 import { Skeleton } from "@mui/material";
 import { useRouter } from "next/router";
 import { useRecoilState } from "recoil";
-import { userState } from "../atom/userAtom";
 
-export default function LeftSide() {
-  const { data: session, status } = useSession();
+
+export default function LeftSide({user, activeUser}) {
+/*   const { data: session, status } = useSession(); */
+
   const router = useRouter();
-  //const [currentUser, setCurrentUser] = useRecoilState(userState);
-
-  if (status === "loading") {
-    return (
-      <div className="w-[60px] h-[60px]">
-        <Image src={spiner} alt="spin" className="" />
-      </div>
-    );
-  }
-  if (status === "unauthenticated") {
-    router.push("/auth/Signin");
-  }
 
   return (
     <>
-      {status === 'authenticated'  ? (
+      {user ? (
         <div className="ml-5 w-[280px] xl:mt-[82px] sm:mt-[82px] hidden xl:inline">
           <div className="overflow-hidden mb-2 rounded-md transition-shadow relative border-none shadow-md">
             <div className="pt-3 pr-3 pl-3 pb-4 break-words border-b-[1px] border-[#d6cec2] h-[160.95px] w-[269px]">
@@ -46,15 +35,15 @@ export default function LeftSide() {
                 <div className="w-[72px] h-[72px] z-15">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={session?.user.image}
+                    src={user.photo}
                     alt="profile"
-                    className="rounded-full"
+                    className="rounded-full w-full h-full"
                   />
                 </div>
                 <div className="flex flex-col text-center">
-                  <h4 className="text-sm">{session?.user.name}</h4>
+                  <h4 className="text-sm">{user.displayName}</h4>
                   <span className="text-sm text-[#d6cec2]">
-                    @{session?.user.username}
+                    @{activeUser.username}
                   </span>
                 </div>
               </div>
@@ -89,11 +78,11 @@ export default function LeftSide() {
             </Link>
           </div>
           {/* BUTTON*/}
-          <div className="flex justify-center items-center">
+          {/* <div className="flex justify-center items-center">
             <button className="bg-greenColor text-white rounded-full w-56 h-12 font-bold shadow-md hover:brightness-95 text-lg hidden xl:inline">
               Publicar
             </button>
-          </div>
+          </div> */}
         </div>
       ) : (
         <div className="ml-5 w-[269.58px] xl:mt-[82px] sm:mt-[82px] hidden xl:inline">

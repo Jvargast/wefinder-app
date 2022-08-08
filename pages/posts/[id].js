@@ -1,6 +1,6 @@
 import { ArrowLeftIcon } from "@heroicons/react/outline";
 import Head from "next/head";
-import CommentModal from "../../components/CommentModal";
+
 import LeftSide from "../../components/LeftSide";
 import NavbarUser from "../../components/NavbarUser";
 import Widgets from "../../components/Widgets";
@@ -23,6 +23,7 @@ export default function Post({ newsResults, randomUsersResults }) {
   const { id } = router.query;
   const [post, setPost] = useState();
   const [comments, setComments] = useState([]);
+  console.log(id)
 
   useEffect(
     () => onSnapshot(doc(db, "posts", id), (snapshot) => setPost(snapshot)),
@@ -92,14 +93,13 @@ export default function Post({ newsResults, randomUsersResults }) {
             randomUsersResults={randomUsersResults.results}
           />
           {/* <Modal/> */}
-          <CommentModal />
         </div>
       </main>
     </div>
   );
 }
 
-export async function getServerSideProps() {
+/* export async function getServerSideProps() {
   const newsResults = await fetch(
     "https://saurav.tech/NewsAPI/top-headlines/category/business/us.json"
   ).then((res) => res.json());
@@ -117,3 +117,4 @@ export async function getServerSideProps() {
     },
   };
 }
+ */

@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useCollection } from 'react-firebase-hooks/firestore';
+import { useAuth } from '../context/AuthContext';
 import { db } from '../firebase';
 
 export const getReceipmentEmail = (users, userLoggedIn) => users?.filter((userToFilter) => userToFilter !== userLoggedIn?.email)[0];
@@ -12,8 +13,8 @@ export const getReceipmentEmail = (users, userLoggedIn) => users?.filter((userTo
 
 function Chat({id, users}) {
   const router = useRouter();
-  const {data:session, status} = useSession();
-  const recipientEmail = getReceipmentEmail(users, session ? session.user:null);
+  const {user} = useAuth();
+  const recipientEmail = getReceipmentEmail(users, user ? user:null);
   const colRef = collection(db, "users");
   const q1= query(colRef, where("email", "==", recipientEmail));
   const [recipientSnapshot] = useCollection(q1);
@@ -26,7 +27,7 @@ function Chat({id, users}) {
   
 
   return (
-    <div className='flex items-center cursor-pointer p-4 break-words hover:bg-[#e9eaeb]' onClick={enterChat}>
+    <div className='flex items-center cursor-pointer p-4 break-words hover:bg-[#e9eaeb] w-full' onClick={enterChat}>
         {recipient ? (
             // eslint-disable-next-line @next/next/no-img-element
             <Avatar className='m-2 mr-4' src={recipient?.image} alt={recipient.email}/>

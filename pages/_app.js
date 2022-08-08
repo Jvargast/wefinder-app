@@ -1,17 +1,24 @@
 import { SessionProvider } from 'next-auth/react'
 import { ThemeProvider } from 'next-themes'
 import { RecoilRoot } from 'recoil'
-import '../styles/globals.css'
+import ProtectedRoute from '../components/ProtectedRoutes'
+import { AuthContextProvider } from '../context/AuthContext'
+import '../styles/globals.css';
+import { useRouter } from 'next/router'
+
+
+const noAuthRequired = ['/login', '/signup','']
 
 function MyApp({ Component, pageProps: {session, ...pageProps} }) {
+  const router = useRouter()
   return (
-    <SessionProvider session={session}>
-      <RecoilRoot> 
+    <AuthContextProvider>
+      {/* <RecoilRoot>  */}
       {/* <ThemeProvider attribute="class"> */}
-        <Component {...pageProps} />
+      <Component {...pageProps} />
       {/* </ThemeProvider> */}
-      </RecoilRoot>
-    </SessionProvider>
+      {/* </RecoilRoot> */}
+    </AuthContextProvider>
   )
 }
 
