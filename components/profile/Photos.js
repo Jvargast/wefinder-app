@@ -8,8 +8,8 @@ export default function Photos({photos}) {
 
   return (
     <div className="border-t border-gray-primary mt-12 pt-4">
-      <div className=''>
-      <AnimatePresence className="grid grid-cols-3 gap-2 mt-4 mb-12">
+      <div className="xl:ml-[20px] xl:min-w-[576px] border-l border-r sm:ml-[73px] flex-grow max-w-xl border-[#d6cec2]">
+      <AnimatePresence >
             {photos.map((content, index) => (
               <div key={index} className="mt-4 ">
                 <motion.div
@@ -18,7 +18,7 @@ export default function Photos({photos}) {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 1 }}
-                  className="relative group"
+                  className=""
                 >
                   <Post post={content} id={content.docId} className=""/>
                 </motion.div>

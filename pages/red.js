@@ -15,8 +15,8 @@ export default function Red() {
       </Head>
       <main>
         <NavbarUser user={user} logOut={logOut}/>
-        <div className="flex flex-row  max-w-7xl mx-auto border-b border-graySubTitle">
-            <Network className=""/>
+        <div className="flex flex-row  max-w-7xl mx-auto ">
+            <Network/>
         </div>
       </main>
     </div>

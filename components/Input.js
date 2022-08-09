@@ -24,6 +24,7 @@ import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { async } from "@firebase/util";
 import { useAuth } from "../context/AuthContext";
 import { getUserByUserId } from "../services/firebase";
+import VideoModal from "./VideoModal";
 
 const iconStyle = {
   filter:
@@ -40,6 +41,8 @@ export default function Input() {
 
   const [input, setInput] = useState("");
   const [activeUser, setActiveUser] = useState({});
+
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     async function getUserObjByUserId() {
@@ -151,14 +154,15 @@ export default function Input() {
                   Foto
                 </span>
               </div>
-              <div className="flex flex-row cursor-pointer items-center">
-                <div className="h-6 w-6">
+              <div className="flex flex-row cursor-pointer items-center" onClick={()=> setOpen(!open)}> 
+                <div className="h-6 w-6" >
                   <Image src={videoIcon} alt="vicon" style={iconStyle} />
                 </div>
                 <span className="text-sm text-greenColor ml-1 hover:text-yellowWefinder transition ease-out">
                   Video
                 </span>
               </div>
+              <VideoModal open={open} setOpen={setOpen} user={user} activeUser={activeUser}/>
               <div className=" flex flex-row cursor-pointer items-center">
                 <div className="h-6 w-6 ">
                   <Image src={eventIcon} alt="eicon" style={iconStyle} />

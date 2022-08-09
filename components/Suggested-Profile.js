@@ -1,9 +1,11 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import {updateLoggedInUserFollowing,updateFollowedUsersFollowers} from "../services/firebase";
 
 export default function SuggestedProfile({ spDocId, photo, username, name, loggedUser,userId, profileId}) {
   const [followed, setFollowed] = useState(false);
+  const router = useRouter();
   /*
   loggeduser ow4N38iUepjnivm4J3pN
 profileid ypPaP99n9bPRX4AjWoaYCSRLDqi1
@@ -15,6 +17,7 @@ spDocId m2bFo4keyQer4v3sIHcC
     setFollowed(true);
     await updateLoggedInUserFollowing(loggedUser, profileId, false);
     await updateFollowedUsersFollowers(spDocId, userId, false)
+    router.reload();
   }
 
   return !followed ? (

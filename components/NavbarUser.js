@@ -72,7 +72,7 @@ export default function NavbarUser({user, logOut}) {
                   </div>
                 </ul>
                 <ul
-                  href="/red"
+                  onClick={()=> router.push("/red")}
                   className="cursor-pointer text-greenColor hover:text-white rounded-md text-sm font-medium list-none"
                 >
                   <div className="flex flex-col items-center justify-center min-h-[77px] min-w-[80px] leading-[1.5] hoverEffect ">

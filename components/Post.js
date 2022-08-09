@@ -58,11 +58,14 @@ export default function Post({ post, id}) {
   }, [id]);
   useEffect(() => {
     async function getUserObjByUserId() {
-      const [userGet] = await getUserByUserId(user.uid);
-      setActiveUser(userGet);
+      if(user){
+        const [userGet] = await getUserByUserId(user.uid);
+        setActiveUser(userGet);
+      }
+      
     }
 
-    if (user.uid != null) {
+    if (user) {
       getUserObjByUserId(user.uid);
     }
   }, [user]);
@@ -88,7 +91,7 @@ export default function Post({ post, id}) {
       if (post.image) {
         deleteObject(ref(storage, `posts/${id}/image`));
       }
-      
+      router.reload();
     }
   }
 
@@ -144,7 +147,7 @@ export default function Post({ post, id}) {
             <div className="w-full">
               {!post?.image && post?.video ? (
                 <ReactPlayer
-                  url={post?.data()?.video}
+                  url={post?.video}
                   className="overflow-hidden rounded-2xl object-contain"
                   width={"100%"}
                 />

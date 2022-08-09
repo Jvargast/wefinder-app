@@ -45,7 +45,7 @@ export default function SuggestProfiles({ userId, following, loggedUser }) {
       ) : (
         <div className="mt-[82px] xl:w-[600px] hidden lg:inline ml-8 space-y-5">
           <div className="sticky top-32 text-graySubTitle space-y-3 bg-[#dddbdb] rounded-xl pt-2 w-[90%] xl:w-[75%] ">
-            <h4 className="font-bold text-xl px-4">¿A quién seguir?</h4>
+            <h4 className="font-bold text-xl px-4 py-4">¿A quién seguir?</h4>
           </div>
         </div>
       )}
