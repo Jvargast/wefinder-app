@@ -54,13 +54,11 @@ export default function NavbarUser({user, logOut}) {
             </div>
             <div className="hidden md:block space-x-0 md:space-x-4">
               <div className="flex items-center">
-                <Link
-                  activeClass="inicio"
-                  href="/dashboard"
-                  smooth={true}
-                  offset={50}
-                  duration={500}
-                  className="cursor-pointer text-greenColor font-semibold"
+                <ul
+                  onClick={()=> {
+                    router.push("/dashboard")
+                  }}
+                  className="cursor-pointer text-greenColor font-semibold list-none"
                 >
                   <div className="flex flex-col items-center justify-center min-h-[77px] min-w-[60px] leading-[1.5] hoverEffect xl:min-w-[80px]">
                     <div className="w-6 h-6 ">
@@ -72,14 +70,10 @@ export default function NavbarUser({user, logOut}) {
                     </div>
                     <span className="text-md">Inicio</span>
                   </div>
-                </Link>
-                <Link
-                  activeClass="redes"
+                </ul>
+                <ul
                   href="/red"
-                  smooth={true}
-                  offset={50}
-                  duration={500}
-                  className="cursor-pointer text-greenColor hover:text-white rounded-md text-sm font-medium"
+                  className="cursor-pointer text-greenColor hover:text-white rounded-md text-sm font-medium list-none"
                 >
                   <div className="flex flex-col items-center justify-center min-h-[77px] min-w-[80px] leading-[1.5] hoverEffect ">
                     <div className="w-6 h-6 ">
@@ -91,15 +85,10 @@ export default function NavbarUser({user, logOut}) {
                     </div>
                     <span className="text-md">Mi red</span>
                   </div>
-                </Link>
-                <Link
-                  activeClass="trabajos"
-                  href="/trabajos"
-                  aria-disabled={true}
-                  smooth={true}
-                  offset={50}
-                  duration={500}
-                  className="cursor-pointer text-greenColor hover:text-white  rounded-md text-sm font-medium"
+                </ul>
+                <ul
+                  
+                  className="cursor-not-allowed text-greenColor hover:text-white  rounded-md text-sm font-medium list-none"
                 >
                   <div className="flex flex-col items-center justify-center min-h-[77px] min-w-[80px] leading-[1.5] hoverEffect ">
                     <div className="w-6 h-6 ">
@@ -111,15 +100,12 @@ export default function NavbarUser({user, logOut}) {
                     </div>
                     <span className="text-md">Trabajos</span>
                   </div>
-                </Link>
+                </ul>
 
-                <Link
-                  activeClass="mensajes"
-                  href="/chat"
-                  smooth={true}
-                  offset={50}
-                  duration={500}
-                  className="cursor-pointer text-greenColor hover:text-white  rounded-md text-sm font-medium"
+                <ul
+
+                  onClick={()=> router.push("/chat")}
+                  className="cursor-pointer text-greenColor hover:text-white  rounded-md text-sm font-medium list-none"
                 >
                   <div className="flex flex-col items-center justify-center min-h-[77px] min-w-[80px] leading-[1.5] hoverEffect ">
                     <div className="w-6 h-6 ">
@@ -131,7 +117,7 @@ export default function NavbarUser({user, logOut}) {
                     </div>
                     <span className="text-md">Mensajes</span>
                   </div>
-                </Link>
+                </ul>
                 <li
                   className="cursor-pointer text-greenColor rounded-md text-sm font-medium items-center list-none"
                   onClick={()=>setActive(!active)}

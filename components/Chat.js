@@ -20,6 +20,7 @@ function Chat({id, users}) {
   const [recipientSnapshot] = useCollection(q1);
   const recipient = recipientSnapshot?.docs?.[0]?.data();
   
+  
   const enterChat = () => {
     router.push(`/chat/${id}`)
   }

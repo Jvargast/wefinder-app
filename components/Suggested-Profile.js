@@ -25,7 +25,7 @@ spDocId m2bFo4keyQer4v3sIHcC
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={photo} alt="user" className="rounded-full w-full h-full" />
       </div>
-      <div className="truncate ml-3 leading-5">
+      <div className="truncate ml-3 leading-5 w-[70%]">
         <Link href={`p/${username}`}>
           <h4 className="font-bold hover:underline text-[14px] truncate">
             {" "}

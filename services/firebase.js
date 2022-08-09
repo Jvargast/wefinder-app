@@ -207,10 +207,25 @@ export async function getChatByEmail(email) {
     const result = await getDocs(q);
   
     return result
-    /* return result.docs.map((chat)=> ({
-      ...chat.data(),
-      docId: chat.id
-    })) */
   
-  
+}
+
+export async function getMessagesAndChat(){
+  const messages = [];
+    const ref = onSnapshot(collection(db, "chats", context.query.id, "messages"),orderBy("timestamp", 'asc'),(snapshot) => snapshot.docs.map(doc=> ({id:doc.id,...doc.data()})
+    ).map(mess => {if(mess !== null){messages.push({...mess, timestamp: mess?.timestamp?.toDate().getTime()})}}))
+
+    //Prep the chat
+    const chatRes = await getDoc(doc(db,"chats", context.query.id));
+    const chat = {
+        id: chatRes.id,
+        ...chatRes.data()
+    }
+
+
+    return {
+        messages:messages,
+        chat:chat
+
+    }
 }

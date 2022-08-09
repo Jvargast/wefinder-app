@@ -88,7 +88,7 @@ export default function Post({ post, id}) {
       if (post.image) {
         deleteObject(ref(storage, `posts/${id}/image`));
       }
-      router.push("/");
+      
     }
   }
 
