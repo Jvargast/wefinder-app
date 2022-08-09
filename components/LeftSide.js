@@ -52,23 +52,23 @@ export default function LeftSide({user, activeUser}) {
             <div className="text-xs px-3 py-1">Item</div>
           </div>
           <div className="flex flex-col pt-2 text-left shadow-lg rounded-md transition-shadowxw mb-2">
-            <Link href="/" className="text-graySubTitle ">
+            <Link href="#" className="text-graySubTitle" >
               <span className="text-xs px-3 py-1 hover:bg-[#E7F2F7] cursor-pointer">
                 Grupos
               </span>
             </Link>
-            <Link href="/">
+            <Link href="#">
               <span className="text-xs px-3 py-1 hover:bg-[#E7F2F7] cursor-pointer flex justify-between items-center">
                 Eventos
                 <Image src={plus} alt="plus" />
               </span>
             </Link>
-            <Link href="/">
+            <Link href="#">
               <span className="text-xs px-3 py-1 hover:bg-[#E7F2F7] cursor-pointer">
                 Tags Seguidos
               </span>
             </Link>
-            <Link href="/">
+            <Link href="#">
               <span
                 className="text-xs px-3 py-1 text-graySubTitle hover:bg-[#ECEFF1] border-t-[1px] border-[#d6cec2]"
                 aria-disabled

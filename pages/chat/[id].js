@@ -9,45 +9,47 @@ import NavbarUser from "../../components/NavbarUser";
 import SidebarChat from "../../components/SidebarChat";
 import { useAuth } from "../../context/AuthContext";
 import { db } from "../../firebase";
-import { getMessagesAndChat } from "../../services/firebase";
+import { getChat, getMessages, getMessagesAndChat } from "../../services/firebase";
 
-export default function Chat({chat, messages}) {
+export default function Chat() {
   const {user, logOut} = useAuth();
   const router = useRouter();
   const {id} = router.query;
 
-  const [chatMess, setChatMess] = useState(null);
+  const [chatCon, setChatCon] = useState(null);
+  const [messCon, setMessCon] = useState(null);
 
   useEffect(() => {
     async function chatAndMessages() {
-       const ms = await getMessagesAndChat(id); 
-       setChatMess(ms);    
+       const mess = await getMessages(id); 
+       const chat = await getChat(id);
+       setChatCon(chat);    
+       setMessCon(mess);
     }
     chatAndMessages();
   }, [id, router]); 
 
-  console.log(chatMess);
 
 
-  return (
+  return chatCon && messCon ? (
     <div>
       <Head>
-        <title>WefinderChat con {getReceipmentEmail(chat.users, user ? user:null)}</title>
+       <title>WefinderChat con {getReceipmentEmail(chatCon.users, user ? user:null)}</title> 
       </Head>
       <main>
         <NavbarUser user={user} logOut={logOut}/>
         <div className="flex flex-row min-h-screen max-w-7xl mx-auto">
             <SidebarChat user={user}/>
             <div className="flex-1 overflow-scroll h-[90vh] ">
-                 <ChatScreen chat={chat} messages={messages}/> 
+                 <ChatScreen chat={chatCon} messages={messCon}/>  
             </div>
         </div>
       </main>
     </div>
-  );
+  ):null;
 }
 
-export async function getServerSideProps(context) {
+/* export async function getServerSideProps(context) {
     //Prep messages
     const messages = [];
     const ref = onSnapshot(collection(db, "chats", context.query.id, "messages"),orderBy("timestamp", 'asc'),(snapshot) => snapshot.docs.map(doc=> ({id:doc.id,...doc.data()})
@@ -68,3 +70,4 @@ export async function getServerSideProps(context) {
         }
     }
 }
+ */

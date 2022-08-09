@@ -6,6 +6,7 @@ import {
   getDoc,
   getDocs,
   limit,
+  onSnapshot,
   orderBy,
   query,
   setDoc,
@@ -210,22 +211,21 @@ export async function getChatByEmail(email) {
   
 }
 
-export async function getMessagesAndChat(){
+export async function getMessages(id){
   const messages = [];
-    const ref = onSnapshot(collection(db, "chats", context.query.id, "messages"),orderBy("timestamp", 'asc'),(snapshot) => snapshot.docs.map(doc=> ({id:doc.id,...doc.data()})
+    const ref = onSnapshot(collection(db, "chats", id, "messages"),orderBy("timestamp", 'asc'),(snapshot) => snapshot.docs.map(doc=> ({id:doc.id,...doc.data()})
     ).map(mess => {if(mess !== null){messages.push({...mess, timestamp: mess?.timestamp?.toDate().getTime()})}}))
 
     //Prep the chat
-    const chatRes = await getDoc(doc(db,"chats", context.query.id));
-    const chat = {
-        id: chatRes.id,
-        ...chatRes.data()
-    }
+    return messages
+}
 
+export async function getChat(id){
+  const chatRes = await getDoc(doc(db,"chats", id));
+  const chat = {
+      id: chatRes.id,
+      ...chatRes.data()
+  }
 
-    return {
-        messages:messages,
-        chat:chat
-
-    }
+  return chat;
 }

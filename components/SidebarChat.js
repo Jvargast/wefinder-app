@@ -53,7 +53,6 @@ export default function SidebarChat() {
     getChats();
   },[activeUser]);
 
-  console.log(emailStarter)
 
 
 
