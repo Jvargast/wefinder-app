@@ -9,16 +9,52 @@ import { getSession, useSession } from "next-auth/react";
 import { useCollection } from 'react-firebase-hooks/firestore';
 import Chat from "./Chat";
 import { useAuth } from "../context/AuthContext";
+import { getChatByEmail, getUserByUserId } from "../services/firebase";
 
 
-export default function SidebarChat({user}) {
-  const [userState, setUserState] = useState(null);
+export default function SidebarChat() {
+  const {user} = useAuth();
+  const [activeUser, setActiveUser] = useState({});
+
+  useEffect(() => {
+    async function getUserObjByUserId() {
+      if(user){
+        const [userGet] = await getUserByUserId(user.uid);
+        setActiveUser(userGet);
+      }
+      
+    }
+
+    if(user){
+      getUserObjByUserId(user.uid);
+    }
+   
+
+  }, [user]);
+
+
+
   const colRef = collection(db, "chats");
     //const result = await getDocs(query(colRef, where('users', 'array-contains', session.user.email)));
   const q1= query(colRef, where("users", "array-contains", user ? user.email:null));
   const [chatSnapshot, loading, error] = useCollection(q1);
 
-  
+  const [emailStarter, setEmailStarter] = useState(null)
+
+  useEffect(()=> {
+    async function getChats() {
+        if (activeUser.username!= null){
+            const chat = await getChatByEmail(activeUser.email);
+            setEmailStarter(chat)
+
+        }
+        
+    }
+    getChats();
+  },[activeUser]);
+
+  console.log(emailStarter)
+
 
 
 const createChat = async() => {
@@ -62,7 +98,7 @@ const createChat = async() => {
       </div>
       <Button className="w-full text-graySubTitle border-t border-b border-graySubTitle" onClick={createChat}>Comenzar nuevo chat</Button>
       {/*List of Chats */}
-      {chatSnapshot?.docs.map((chat) =>  (
+      {emailStarter?.docs.map((chat) =>  (
          <Chat key={chat.id} id={chat.id} users={chat.data().users}/>
       ))} 
     </div>

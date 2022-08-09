@@ -198,3 +198,19 @@ export async function toggleFollow(isFollowingProfile, activeUserDocId, profileD
   await updateLoggedInUserFollowing(activeUserDocId, profileUserId, isFollowingProfile);
   await updateFollowedUsersFollowers(profileDocId,followingUserId, isFollowingProfile);
 }
+
+export async function getChatByEmail(email) {
+  //const [user] = await getUserByUsername(username); 
+
+    const docRef = collection(db, "chats");
+    const q = query(docRef, where("users", "array-contains", email ))
+    const result = await getDocs(q);
+  
+    return result
+    /* return result.docs.map((chat)=> ({
+      ...chat.data(),
+      docId: chat.id
+    })) */
+  
+  
+}
