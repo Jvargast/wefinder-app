@@ -165,6 +165,7 @@ export default function Register(props) {
   const [matchFocus, setMatchFocus] = useState(false);
   const [errMsg, setErrMsg] = useState("");
   const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [state, setState] = useState({
     displayName: "",
@@ -197,7 +198,6 @@ export default function Register(props) {
   const handleSubmit = async(e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-
       setErrMsg("Las contraseñas no coinciden")
       return;
     }
@@ -211,15 +211,15 @@ export default function Register(props) {
 
     const userNameExist = await doesUsernameExist(username);
 
-    if(!userNameExist && success===true) {
-      console.log("por pasar")
+    if(!userNameExist) {
       try {
-        const createUserResult = await createUserWithEmailAndPassword(auth, email, password);
-        updateProfile(auth.currentUser, {
+        setLoading(true);
+        await createUserWithEmailAndPassword(auth, email, password);
+        await updateProfile(auth.currentUser, {
           displayName:displayName,
           photoURL:profilePic
         });
-        const docRef = await addDoc(collection(db, "users"), {
+        await addDoc(collection(db, "users"), {
           userId: auth.currentUser.uid,
           username: username,
           displayName: displayName,
@@ -228,9 +228,10 @@ export default function Register(props) {
           following: [],
           followers:[],
           dateCreatedAt: Date.now()
-        }); 
+        });
+        
         router.push("/dashboard");
-        router.reload(); 
+        setLoading(false);
         setState({
           displayName: "",
           email: "",
@@ -238,8 +239,6 @@ export default function Register(props) {
           password: "",
           confirmPassword: "",
         });
-
-        
     
       } catch (error){
         setErrMsg(error)
@@ -361,9 +360,12 @@ export default function Register(props) {
               >
                 Debe calzar con la primera contraseña
               </p>
+              {loading ? <div className="mt-4 text-sm text-tahiti">Cargando...</div>: <div></div>}
             <ButtonContainer>
               <Button type="submit">Inscríbete</Button>
+              
             </ButtonContainer>
+            
             <p>
               <span>¿Ya tienes cuenta? </span>
               <Link href="/login">Acceder</Link>

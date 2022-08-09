@@ -104,7 +104,7 @@ export default function Input() {
           <div className="w-[72px] h-[72px]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={user.photo}
+              src={activeUser.profilePic}
               alt="user"
               className="rounded-full cursor-pointer hover:brightness-95 w-full h-full"
             />

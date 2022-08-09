@@ -30,8 +30,8 @@ export default function NavbarUser({user, logOut}) {
   useEffect(()=> {
     async function getUser(){
         if(user){
-          const [{username}]= await getUserByUserId(user.uid);
-          setActiveUser(username);
+          const [userNy]= await getUserByUserId(user.uid);
+          setActiveUser(userNy);
         }
         
       }
@@ -39,7 +39,7 @@ export default function NavbarUser({user, logOut}) {
   },[user])
 
   const enterProfile = () => {
-    router.push(`/p/${activeUser}`)
+    router.push(`/p/${activeUser.username}`)
   }
 
 
@@ -125,7 +125,7 @@ export default function NavbarUser({user, logOut}) {
                   <div className="flex flex-col items-center justify-center min-h-[77px] min-w-[80px] leading-[1.5] hoverEffect ">
                     
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      {user ?  (<Avatar className="cursor-pointer hover:opacity-80" src={user.photo} alt={user.email} />): <Avatar className="cursor-pointer hover:opacity-80"/>}
+                      {user ?  (<Avatar className="cursor-pointer hover:opacity-80" src={activeUser.profilePic} alt={activeUser.email} />): <Avatar className="cursor-pointer hover:opacity-80"/>}
                     
                     <span className="text-sm">Yo</span>
                   </div>

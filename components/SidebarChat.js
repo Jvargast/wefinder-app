@@ -78,7 +78,8 @@ const createChat = async() => {
   return (
     <div className="mt-[82px] flex-[0.45] h-[90vh] min-w-[350px] max-w-[380px] overflow-y-scroll">
       <div className="flex sticky top-0 bg-white z-10 justify-between items-center h-[80px] border-b border-graySubTitle pl-2">
-        {user ?  (<Avatar className="cursor-pointer hover:opacity-80" src={user ? user.photo: null} alt={user.email} />): <Avatar className="cursor-pointer hover:opacity-80"/>}
+        {user ?  (<Avatar className="cursor-pointer hover:opacity-80" src={user ? activeUser.profilePic: null} alt={user.email} />): <Avatar className="cursor-pointer hover:opacity-80"/>}
+        <div>{activeUser.username}</div>
         <div className="flex flex-row items-center">
 
             <div className="w-7 h-7 flex items-center justify-center">

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 
 import UserIcon from "../assets/user.svg";
 import cardbg from "../assets/card-bg.svg";
@@ -11,12 +11,13 @@ import { useSession } from "next-auth/react";
 import { Skeleton } from "@mui/material";
 import { useRouter } from "next/router";
 import { useRecoilState } from "recoil";
+import { getUserByUserId } from "../services/firebase";
 
 
 export default function LeftSide({user, activeUser}) {
 /*   const { data: session, status } = useSession(); */
 
-  const router = useRouter();
+  /* const router = useRouter(); */
 
   return (
     <>
@@ -35,13 +36,13 @@ export default function LeftSide({user, activeUser}) {
                 <div className="w-[72px] h-[72px] z-15">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={user.photo}
+                    src={activeUser.profilePic}
                     alt="profile"
                     className="rounded-full w-full h-full"
                   />
                 </div>
                 <div className="flex flex-col text-center">
-                  <h4 className="text-sm">{user.displayName}</h4>
+                  <h4 className="text-sm">{activeUser.displayName}</h4>
                   <span className="text-sm text-[#d6cec2]">
                     @{activeUser.username}
                   </span>

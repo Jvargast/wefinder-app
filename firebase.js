@@ -5,12 +5,12 @@ import { getStorage } from "firebase/storage";
 import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBrjqCLVrLmVqTF-DUGtvIMhuuZXtF-r2o",
-  authDomain: "wefinder-7276a.firebaseapp.com",
-  projectId: "wefinder-7276a",
-  storageBucket: "wefinder-7276a.appspot.com",
-  messagingSenderId: "331599924871",
-  appId: "1:331599924871:web:b6c4d6c627ee6fb710b222"
+  apiKey: "AIzaSyCQStw1X92KHVf7_D-Egpu5ASCewk0otrI",
+  authDomain: "wefinder-web.firebaseapp.com",
+  projectId: "wefinder-web",
+  storageBucket: "wefinder-web.appspot.com",
+  messagingSenderId: "94034669276",
+  appId: "1:94034669276:web:b5cf5585d4bbff5826ce19"
 };
 /*
 apiKey: "AIzaSyDqVtvYengYuutWowX4Y3y8Xid9d1CnTCI",
