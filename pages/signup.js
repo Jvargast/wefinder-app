@@ -229,7 +229,8 @@ export default function Register(props) {
           followers:[],
           dateCreatedAt: Date.now()
         }); 
-        router.push("/dashboard"); 
+        router.push("/dashboard");
+        router.reload(); 
         setState({
           displayName: "",
           email: "",
